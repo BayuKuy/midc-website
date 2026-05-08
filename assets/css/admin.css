@@ -1,0 +1,156 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background:#f8fafc;
+}
+
+/* Sidebar */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    background:#ffffff;
+    position:fixed;
+    top:0;
+    left:0;
+    padding:20px;
+    border-right:1px solid #e2e8f0;
+    transition:0.3s;
+    z-index:999;
+}
+
+.sidebar.hide{
+    left:-260px;
+}
+
+.sidebar-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.sidebar-header h4{
+    font-weight:700;
+}
+
+.sidebar-header button{
+    border:none;
+    background:none;
+    display:none;
+}
+
+.sidebar-menu{
+    list-style:none;
+    padding:0;
+}
+
+.sidebar-menu li{
+    margin-bottom:10px;
+}
+
+.sidebar-menu li a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:#334155;
+    padding:12px 15px;
+    border-radius:12px;
+    transition:0.2s;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active{
+    background:#2563eb;
+    color:white;
+}
+
+.menu-title{
+    margin-top:25px;
+    margin-bottom:10px;
+    font-size:13px;
+    color:#94a3b8;
+    text-transform:uppercase;
+}
+
+/* Main Content */
+
+.main-content{
+    margin-left:260px;
+    transition:0.3s;
+}
+
+/* Navbar */
+
+.top-navbar{
+    height:70px;
+    background:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.toggle-btn{
+    border:none;
+    background:none;
+    font-size:22px;
+}
+
+.navbar-profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.navbar-profile img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+}
+
+/* Dashboard Card */
+
+.dashboard-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.03);
+}
+
+.dashboard-icon{
+    font-size:35px;
+    color:#2563eb;
+}
+
+/* Responsive */
+
+@media(max-width:992px){
+
+    .sidebar{
+        left:-260px;
+    }
+
+    .sidebar.show{
+        left:0;
+    }
+
+    .sidebar-header button{
+        display:block;
+    }
+
+    .main-content{
+        margin-left:0;
+    }
+
+}
