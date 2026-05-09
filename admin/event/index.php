@@ -8,6 +8,7 @@ if(!isset($_SESSION['login'])){
 }
 
 include '../../config/koneksi.php';
+
 /*
 |--------------------------------------------------------------------------
 | FLASH MESSAGE
@@ -34,7 +35,13 @@ if(isset($_SESSION['error'])){
 
 }
 
-$query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
+/*
+|--------------------------------------------------------------------------
+| AMBIL DATA EVENT
+|--------------------------------------------------------------------------
+*/
+
+$query = mysqli_query($conn, "SELECT * FROM event ORDER BY id_event DESC");
 
 ?>
 
@@ -43,7 +50,7 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Berita</title>
+    <title>Kelola Event</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -53,6 +60,9 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
 
     <!-- Admin CSS -->
     <link rel="stylesheet" href="../../assets/css/admin.css">
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
 
@@ -80,57 +90,77 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
             color:white;
         }
 
-        .news-card{
+        /* Card */
+
+        .event-card{
             background:white;
-            border-radius:22px;
+            border-radius:24px;
             overflow:hidden;
             box-shadow:0 5px 20px rgba(0,0,0,0.04);
             transition:0.3s;
             height:100%;
         }
 
-        .news-card:hover{
+        .event-card:hover{
             transform:translateY(-5px);
         }
 
-        .news-image{
+        .event-image{
             width:100%;
-            height:220px;
+            height:230px;
             object-fit:cover;
         }
 
-        .news-content{
+        .event-content{
             padding:20px;
         }
 
-        .news-date{
-            font-size:13px;
+        .event-date{
+            font-size:14px;
             color:#64748b;
             margin-bottom:10px;
         }
 
-        .news-title{
+        .event-title{
             font-size:20px;
             font-weight:700;
-            margin-bottom:10px;
             color:#0f172a;
+            margin-bottom:12px;
         }
 
-        .news-text{
+        .event-location{
             font-size:14px;
             color:#475569;
+            margin-bottom:15px;
+        }
+
+        /* Status Badge */
+
+        .badge-status{
+            display:inline-block;
+            padding:8px 14px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:600;
             margin-bottom:20px;
         }
 
-        .news-footer{
+        .upcoming{
+            background:#dbeafe;
+            color:#2563eb;
+        }
+
+        .selesai{
+            background:#dcfce7;
+            color:#16a34a;
+        }
+
+        /* Footer */
+
+        .event-footer{
             display:flex;
             justify-content:space-between;
             align-items:center;
-        }
-
-        .news-author{
-            font-size:14px;
-            color:#64748b;
         }
 
         .action-btn{
@@ -175,18 +205,18 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
 
         <div class="container-fluid p-4">
 
-            <!-- Header -->
+            <!-- HEADER -->
 
             <div class="page-header">
 
                 <div>
 
                     <h3 class="fw-bold mb-1">
-                        Kelola Berita
+                        Kelola Event
                     </h3>
 
                     <p class="text-secondary">
-                        Manajemen berita dan artikel website MIDC
+                        Manajemen kegiatan dan event MIDC
                     </p>
 
                 </div>
@@ -195,13 +225,13 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
 
                     <i class="fa-solid fa-plus"></i>
 
-                    Tambah Berita
+                    Tambah Event
 
                 </a>
 
             </div>
 
-            <!-- News Card -->
+            <!-- EVENT CARD -->
 
             <div class="row">
 
@@ -209,16 +239,20 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
 
                     <div class="col-lg-4 col-md-6 mb-4">
 
-                        <div class="news-card">
+                        <div class="event-card">
+
+                            <!-- POSTER -->
 
                             <img 
-                                src="../../assets/uploads/berita/<?= $data['gambar']; ?>" 
-                                class="news-image"
+                                src="../../assets/uploads/event/<?= $data['poster']; ?>"
+                                class="event-image"
                             >
 
-                            <div class="news-content">
+                            <div class="event-content">
 
-                                <div class="news-date">
+                                <!-- DATE -->
+
+                                <div class="event-date">
 
                                     <i class="fa-regular fa-calendar"></i>
 
@@ -226,37 +260,69 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
 
                                 </div>
 
-                                <div class="news-title">
+                                <!-- TITLE -->
 
-                                    <?= $data['judul']; ?>
+                                <div class="event-title">
 
-                                </div>
-
-                                <div class="news-text">
-
-                                    <?= substr($data['isi'], 0, 100); ?>...
+                                    <?= $data['nama_event']; ?>
 
                                 </div>
 
-                                <div class="news-footer">
+                                <!-- LOCATION -->
 
-                                    <div class="news-author">
+                                <div class="event-location">
 
-                                        <i class="fa-regular fa-user"></i>
+                                    <i class="fa-solid fa-location-dot"></i>
 
-                                        <?= $data['penulis']; ?>
+                                    <?= $data['lokasi']; ?>
 
-                                    </div>
+                                </div>
+
+                                <!-- STATUS -->
+
+                                <?php if($data['status'] == 'Upcoming') : ?>
+
+                                    <span class="badge-status upcoming">
+
+                                        Upcoming
+
+                                    </span>
+
+                                <?php else : ?>
+
+                                    <span class="badge-status selesai">
+
+                                        Selesai
+
+                                    </span>
+
+                                <?php endif; ?>
+
+                                <!-- FOOTER -->
+
+                                <div class="event-footer">
+
+                                    <small class="text-secondary">
+                                        MIDC Event
+                                    </small>
 
                                     <div class="action-btn">
 
-                                        <a href="edit.php?id=<?= $data['id_berita']; ?>" class="btn-edit">
+                                        <!-- EDIT -->
+
+                                        <a href="edit.php?id=<?= $data['id_event']; ?>" class="btn-edit">
 
                                             <i class="fa-solid fa-pen"></i>
 
                                         </a>
 
-                                        <a href="#" class="btn-delete" onclick="confirmDelete(<?= $data['id_berita'] ?>)">
+                                        <!-- DELETE -->
+
+                                        <a 
+                                            href="#"
+                                            class="btn-delete"
+                                            onclick="confirmDelete(<?= $data['id_event']; ?>)"
+                                        >
 
                                             <i class="fa-solid fa-trash"></i>
 
@@ -282,80 +348,88 @@ $query = mysqli_query($conn, "SELECT * FROM berita ORDER BY id_berita DESC");
 
     <!-- JS -->
     <script src="../../assets/js/admin.js"></script>
-    
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
+    <!-- DELETE -->
 
-function confirmDelete(id){
+    <script>
 
-    Swal.fire({
+        function confirmDelete(id){
 
-        title: 'Yakin ingin menghapus?',
+            Swal.fire({
 
-        text: 'Berita yang dihapus tidak bisa dikembalikan!',
+                title: 'Hapus event?',
 
-        icon: 'warning',
+                text: 'Event yang dihapus tidak bisa dikembalikan!',
 
-        showCancelButton: true,
+                icon: 'warning',
 
-        confirmButtonColor: '#dc2626',
+                showCancelButton: true,
 
-        cancelButtonColor: '#64748b',
+                confirmButtonColor: '#dc2626',
 
-        confirmButtonText: 'Ya, hapus!',
+                cancelButtonColor: '#64748b',
 
-        cancelButtonText: 'Batal'
+                confirmButtonText: 'Ya, hapus!',
 
-    }).then((result) => {
+                cancelButtonText: 'Batal'
 
-        if(result.isConfirmed){
+            }).then((result) => {
 
-            window.location = 'hapus.php?id=' + id;
+                if(result.isConfirmed){
+
+                    window.location.href = 'hapus.php?id=' + id;
+
+                }
+
+            });
 
         }
 
-    });
+    </script>
 
-}
+    <!-- SUCCESS -->
 
-</script>
-<?php if($success != "") : ?>
+    <?php if($success != "") : ?>
 
-<script>
+    <script>
 
-Swal.fire({
+        Swal.fire({
 
-    icon: 'success',
+            icon: 'success',
 
-    title: 'Berhasil!',
+            title: 'Berhasil!',
 
-    text: '<?= $success; ?>',
+            text: '<?= $success; ?>',
 
-    confirmButtonColor: '#2563eb'
+            confirmButtonColor: '#2563eb'
 
-});
+        });
 
-</script>
+    </script>
 
-<?php endif; ?>
+    <?php endif; ?>
 
-<?php if($error != "") : ?>
+    <!-- ERROR -->
 
-<script>
+    <?php if($error != "") : ?>
 
-Swal.fire({
+    <script>
 
-    icon: 'error',
+        Swal.fire({
 
-    title: 'Oops...',
+            icon: 'error',
 
-    text: '<?= $error; ?>',
+            title: 'Oops...',
 
-    confirmButtonColor: '#dc2626'
+            text: '<?= $error; ?>',
 
-});
+            confirmButtonColor: '#dc2626'
 
-</script>
+        });
 
-<?php endif; ?>
+    </script>
+
+    <?php endif; ?>
+
+</body>
+</html>

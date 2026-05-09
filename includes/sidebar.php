@@ -25,14 +25,14 @@
         </li>
 
         <li>
-            <a href="#">
+            <a href="http://localhost/MIDC/admin/pengurus/index.php">
                 <i class="fa-solid fa-users"></i>
                 Pengurus
             </a>
         </li>
 
         <li>
-            <a href="#">
+            <a href="http://localhost/MIDC/admin/divisi/index.php">
                 <i class="fa-solid fa-layer-group"></i>
                 Divisi
             </a>
@@ -50,14 +50,14 @@
         </li>
 
         <li>
-            <a href="#">
+            <a href="http://localhost/MIDC/admin/event/index.php">
                 <i class="fa-solid fa-calendar"></i>
                 Event
             </a>
         </li>
 
         <li>
-            <a href="#">
+            <a href="http://localhost/MIDC/admin/proker/index.php">
                 <i class="fa-solid fa-diagram-project"></i>
                 Program Kerja
             </a>
